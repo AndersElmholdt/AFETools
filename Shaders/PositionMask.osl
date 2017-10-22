@@ -1,0 +1,36 @@
+float CuboidFalloff(point p)
+{
+	return length(max(abs(p) - vector(0.5,0.5,0.5), 0.0));
+}
+
+float CylindricalFalloff(point p)
+{
+	return max((distance(point(0,p[1],0), p) - 0.5), CuboidFalloff(p));
+}
+
+float SphericalFalloff(point p)
+{
+	return distance(point(0,0,0), p) - 0.5;
+}
+
+// Adjust matrix to be array enabling multiple input matrices
+shader PositionMask(
+    matrix InMatrix = matrix(1) [[ string widget = "null" ]],
+	float Feather = 1.0 [[ int slider = 1 ]],
+	int FalloffType = 0 [[ string widget = "popup", string options = "Spherical|Cuboid|Cylindrical" ]],
+	color ColorA = color(0.0),
+	color ColorB = color(1.0),
+    output color ColOut = color(1.0))
+    
+{
+    point Pos = transform(1/InMatrix, P);
+	float dist;
+	if (FalloffType == 0)
+		dist = SphericalFalloff(Pos);
+	else if (FalloffType == 1)
+		dist = CuboidFalloff(Pos);
+	else
+		dist = CylindricalFalloff(Pos);
+	float fac = clamp(dist/max(Feather, 0.001), 0.0, 1.0);
+	ColOut = mix(ColorA, ColorB, fac);
+}

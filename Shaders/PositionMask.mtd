@@ -1,0 +1,34 @@
+[node PositionMask]    
+	desc					STRING	"This texture allows you to create a mask based on a world position."
+    maya.name               STRING  "PositionMask"
+    maya.id                 INT     0x0012b800
+    maya.classification     STRING  "shader/texture"
+    maya.output_name        STRING  "outColor"
+    maya.output_shortname   STRING  "out"
+	
+	[attr Feather]
+		desc				STRING	"Controls the softness of the edges"
+		min 				FLOAT	0.0f
+		max					FLOAT 	1000.0f
+		default				FLOAT	1.0f
+		maya.name			STRING	"feather"
+		maya.shortname		STRING	"fthr"
+	[attr FalloffType]
+		desc				STRING	"Controls the type of falloff"
+		min					INT		0
+		max					INT		2
+		default				INT		0
+		maya.name			STRING	"fallofftype"
+		maya.shortname		STRING	"foft"
+	[attr InMatrix]
+		desc				STRING	"The world position to base the mask off of"
+		maya.name			STRING	"inmatrix"
+		maya.shortname		STRING	"inm"
+	[attr ColorA]
+		desc				STRING	"The color of the masked off area"
+		maya.name			STRING	"colora"
+		maya.shortname		STRING	"cola"
+	[attr ColorB]
+		desc				STRING	"The color of the remaining area"
+		maya.name			STRING	"colorb"
+		maya.shortname		STRING	"colb"

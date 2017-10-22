@@ -1,0 +1,71 @@
+global proc PosMask_InMatrixChanged(string $matrixAttrName, string $textFieldName)
+{
+	$connectedObject = `listConnections $matrixAttrName`;
+	if (size($connectedObject) == 1)
+		$newLabel = "Linked object: " + $connectedObject[0];
+	else
+		$newLabel = "Linked object: None";
+	text -e -label $newLabel $textFieldName;
+}
+
+global proc PosMask_LinkObject(string $matrixAttrName, string $textFieldName)
+{
+	string $array[] = `ls -sl -tr`;
+	for ($item in $array)
+	{
+		$outAttrName = $item + ".matrix";
+		connectAttr -f $outAttrName $matrixAttrName;
+		PosMask_InMatrixChanged($matrixAttrName, $textFieldName);
+		break;
+	}
+}
+
+global proc PosMask_ButtonCreate(string $matrixAttrName)
+{
+	columnLayout -columnAttach "both" 5 -rowSpacing 10 -adj 1;
+	$textFieldName = `text -font "boldLabelFont" "Linked object: None"`;
+	
+	$linkCommand = "PosMask_LinkObject(\"" + $matrixAttrName + "\", \"" + $textFieldName + "\");";
+	button -l "Link Selected" -height 30 -c $linkCommand;
+	
+	$attrChangeCommand = "PosMask_InMatrixChanged(\"" + $matrixAttrName + "\", \"" + $textFieldName + "\");";
+	int $sj1 = `scriptJob -connectionChange $matrixAttrName $attrChangeCommand`;
+}
+
+global proc PosMask_ButtonUpdate(string $matrixAttrName)
+{
+	//
+}
+
+global proc PosMask_FeatherCreate(string $featherAttrName)
+{
+    attrFieldSliderGrp -ann "Controls how soft the edges of the mask are" -label "Feather" -min 0 -sliderMaxValue 10 -at $featherAttrName PosMask_FeatherSlider;
+}
+
+global proc PosMask_FeatherUpdate(string $featherAttrName)
+{
+	attrFieldSliderGrp -e -at $featherAttrName PosMask_FeatherSlider;
+}
+
+global proc
+AEPositionMaskTemplate(string $nodeName)
+{
+	editorTemplate -beginScrollLayout;
+ 
+	editorTemplate -beginLayout "Linked Object" -collapse 0;
+		editorTemplate -callCustom "PosMask_ButtonCreate" "PosMask_ButtonUpdate" "InMatrix";
+	editorTemplate -endLayout;
+ 
+    editorTemplate -beginLayout "Position Mask Attributes" -collapse 0;
+		editorTemplate -callCustom "PosMask_FeatherCreate" "PosMask_FeatherUpdate" "Feather";
+		editorTemplate -ann "Adjusts which shape the falloff should utilize" -addControl "FalloffType";
+		editorTemplate -ann "The color of the masked off area" -label "Color 1" -addControl "ColorA";
+		editorTemplate -ann "The base color of the unmasked areas" -label "Color 2" -addControl "ColorB";
+		editorTemplate -suppress "normalCamera";
+    editorTemplate -endLayout;
+ 
+    AEdependNodeTemplate $nodeName;
+ 
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
