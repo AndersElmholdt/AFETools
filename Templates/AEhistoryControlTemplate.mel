@@ -1,0 +1,13 @@
+global proc AEhistoryControlNodeTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+ 
+    editorTemplate -beginLayout "History Control Attributes" -collapse 0;
+		editorTemplate -addControl "amount";
+    editorTemplate -endLayout;
+ 
+    AEdependNodeTemplate $nodeName;
+ 
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
