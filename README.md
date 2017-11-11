@@ -1,11 +1,17 @@
-AFE Shaders
+AFE TOOLS
 =====================
-This is a small but expanding collection of some shaders that I have developed for use in Autodesk Maya with Solidangle's Arnold renderer. However, since the shaders are developed using [Open Shading Language](https://github.com/imageworks/OpenShadingLanguage/) they should also work in all supporting renderers such as Pixar's Renderman or Blender's Cycles, even though the shaders have not been tested in any renderer other than Arnold.
+This is a small but expanding collection of tools that I have developed for use in Autodesk Maya. The tools were designed for use with Maya 2017, but most if not all of the tools should work in other versions aswell.
+
+Shaders
+=====================
+In addition to tools, the package also contains some useful shaders that were designed to be used in Autodesk Maya with Solidangle's Arnold renderer. However, since the shaders are developed using [Open Shading Language](https://github.com/imageworks/OpenShadingLanguage/) they should also work in all supporting renderers such as Pixar's Renderman or Blender's Cycles, even though the shaders have not been tested in any renderer other than Arnold.
 
 Installation
 =====================
+The plugins can be used in maya by loading the .mll files (Located in the <i>Plugins/PLUGINNAME/Compiled<i> folder) from Maya's plugin manager.
+
 To utilize the shaders, you must point the Arnold environment variable to the folder where the .osl and .mtl (From the <i>Shaders</i> folder) files are located, i.e. ARNOLD_PLUGIN_PATH=C:\solidangle\mtoadeploy\osl.
 
-Furthermore, the .mel files (From the <i>Templates</i> folder) must be placed in the maya scripts folder, i.e. C:\Users\Username\Documents\maya\scripts.
+Finally, the .mel files (From the <i>Templates</i> folder) must be placed in the maya scripts folder, i.e. C:\Users\Username\Documents\maya\scripts.
 
-For more information on installing OSL shaders refer to the [Arnold User Guide](https://support.solidangle.com/display/A5AFMUG/OSL+Shaders) aswell as the [Maya User Guide](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-592870D2-92E6-44CC-AE54-2F79EC43076A-htm.html) for information on template installation.
+For more information on installing OSL shaders refer to the [Arnold User Guide](https://support.solidangle.com/display/A5AFMUG/OSL+Shaders) aswell as the [Maya User Guide on Template Installation](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-592870D2-92E6-44CC-AE54-2F79EC43076A-htm.html) and the [Maya User Guide on Plugin Installation](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-FA51BD26-86F3-4F41-9486-2C3CF52B9E17-htm.html).
