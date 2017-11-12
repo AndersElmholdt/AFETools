@@ -2,15 +2,15 @@
 // Copyright (C) 2017 Anders Elmholdt
 //
 
-#pragma once
+#ifndef _UTILITY_FUNCTIONS
+#define _UTILITY_FUNCTIONS
 
 #include <maya/MObject.h>
 #include <maya/MPlug.h>
 #include <maya/MString.h>
 #include <maya/MGlobal.h>
 
-constexpr char* PLUGIN_NAME = "HistoryControl";
-constexpr char* PLUGIN_VERSION = "0.1";
+const MString PLUGIN_NAME = "HistoryControl";
 
 inline MString FormatMessage(const MString &msg, const MString &sourceFile, const int &sourceLine)
 {
@@ -49,3 +49,5 @@ namespace utility
 {
 	MObject getDestinationNode(MPlug & plug, MStatus * stat);
 }
+
+#endif

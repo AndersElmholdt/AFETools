@@ -2,7 +2,8 @@
 // Copyright (C) 2017 Anders Elmholdt
 //
 
-#pragma once
+#ifndef _HISTORY_NODE
+#define _HISTORY_NODE
 
 #include <maya/MPxNode.h>
 #include <maya/MCallbackIdArray.h>
@@ -33,3 +34,5 @@ private:
 };
 
 void attributesChanged(MNodeMessage::AttributeMessage, MPlug&, MPlug&, void*);
+
+#endif

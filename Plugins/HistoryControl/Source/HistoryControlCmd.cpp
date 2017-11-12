@@ -40,7 +40,7 @@ MStatus HistoryControlCmd::doIt(const MArgList &)
 		if (!stat)
 			continue;
 
-		for (int i = 0; i < numShapes; ++i)
+		for (unsigned int i = 0; i < numShapes; ++i)
 		{
 			MDagPath sDagPath = tDagPath;
 			sDagPath.extendToShapeDirectlyBelow(i);

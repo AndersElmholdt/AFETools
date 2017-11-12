@@ -2,7 +2,8 @@
 // Copyright (C) 2017 Anders Elmholdt
 //
 
-#pragma once
+#ifndef _HISTORY_CMD
+#define _HISTORY_CMD
 
 #include <maya/MPxCommand.h>
 #include <maya/MDagModifier.h>
@@ -24,3 +25,4 @@ private:
 	MDGModifier dgMod;
 };
 
+#endif
