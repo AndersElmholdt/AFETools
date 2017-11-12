@@ -1,5 +1,6 @@
 from pymel.core import *
 import maya.cmds as cmds
+import webbrowser
 
 def standardWindow(windowName, title, buttons):
     if len(buttons) == 0:
@@ -62,7 +63,7 @@ class HistoryControlWindow(object):
         menuItem(label='Reset Settings', c='win.reset()')
         
         menu(label='Help', hm=True)
-        menuItem(label='View plugin documentation')
+        menuItem(label='View plugin documentation', c='webbrowser.open_new_tab(\"https://github.com/AndersElmholdt/AFETools\")')
         
         setParent(cLayout)
         
