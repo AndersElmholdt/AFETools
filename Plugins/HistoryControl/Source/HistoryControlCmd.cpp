@@ -11,12 +11,25 @@
 #include <maya/MDagPath.h>
 #include <maya/MFnTransform.h>
 #include <maya/MSyntax.h>
+#include <maya/MArgDatabase.h>
 
 const MString HistoryControlCmd::commandName("addHistoryControl");
+const char * const HistoryControlCmd::amountFlag = "-a";
+const char * const HistoryControlCmd::amountLongFlag = "-amount";
 
-MStatus HistoryControlCmd::doIt(const MArgList &)
+MStatus HistoryControlCmd::doIt(const MArgList &args)
 {
 	MStatus stat;
+
+	int amount = 1;
+
+	MArgDatabase argData(syntax(), args, &stat);
+	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Invalid input flags");
+
+	if (argData.isFlagSet(amountFlag))
+		argData.getFlagArgument(amountFlag, 0, amount);
+	if (amount < 0)
+		amount = 1;
 
 	MSelectionList selection;
 	stat = MGlobal::getActiveSelectionList(selection);
@@ -74,6 +87,8 @@ MStatus HistoryControlCmd::doIt(const MArgList &)
 			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to establish connection between " + historyFn.name() + " and " + sDagPathFn.name());
 			stat = dgMod.connect(inNodeOutPlug, historyFn.findPlug("inputPolymesh"));
 			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to establish connection between " + inNodeFn.name() + " and " + historyFn.name());
+			stat = dgMod.newPlugValueInt(historyFn.findPlug("amount"), amount);
+			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to set amount value");
 		}
 	}
 
@@ -92,5 +107,11 @@ MStatus HistoryControlCmd::undoIt()
 
 MSyntax HistoryControlCmd::newSyntax()
 {
-	return MSyntax();
+	MStatus stat;
+	MSyntax syntax;
+	stat = syntax.addFlag(amountFlag, amountLongFlag, MSyntax::kLong);
+	if (!stat)
+		PRINT_ERROR("Unable to add amount flag");
+
+	return syntax;
 }

@@ -2,8 +2,8 @@
 // Copyright (C) 2017 Anders Elmholdt
 //
 
-#ifndef _HISTORY_NODE
-#define _HISTORY_NODE
+#ifndef _HISTORY_CONTROL_NODE
+#define _HISTORY_CONTROL_NODE
 
 #include <maya/MPxNode.h>
 #include <maya/MCallbackIdArray.h>

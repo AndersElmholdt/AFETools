@@ -10,12 +10,12 @@
 MStatus initializePlugin(MObject obj)
 {
 	MStatus stat;
-	MFnPlugin plugin(obj, "Anders Elmholdt", "0.1", "Any");
+	MFnPlugin plugin(obj, "Anders Elmholdt", "1.0", "Any");
 
 	stat = plugin.registerNode(HistoryControlNode::typeName, HistoryControlNode::typeId, HistoryControlNode::creator, HistoryControlNode::initialize);
 	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to register node: " + HistoryControlNode::typeName);
 
-	stat = plugin.registerCommand(HistoryControlCmd::commandName, HistoryControlCmd::creator);
+	stat = plugin.registerCommand(HistoryControlCmd::commandName, HistoryControlCmd::creator, HistoryControlCmd::newSyntax);
 	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to register command: " + HistoryControlCmd::commandName);
 
 	return stat;

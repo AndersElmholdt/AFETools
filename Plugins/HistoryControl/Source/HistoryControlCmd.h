@@ -2,8 +2,8 @@
 // Copyright (C) 2017 Anders Elmholdt
 //
 
-#ifndef _HISTORY_CMD
-#define _HISTORY_CMD
+#ifndef _HISTORY_CONTROL_CMD
+#define _HISTORY_CONTROL_CMD
 
 #include <maya/MPxCommand.h>
 #include <maya/MDagModifier.h>
@@ -23,6 +23,9 @@ public:
 
 private:
 	MDGModifier dgMod;
+
+	static const char * const amountFlag;
+	static const char * const amountLongFlag;
 };
 
 #endif
