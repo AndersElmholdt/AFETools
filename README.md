@@ -1,6 +1,6 @@
 AFE TOOLS
 =====================
-This is a small but expanding collection of tools that I have developed for use in Autodesk Maya. The tools were designed for use with Maya 2017, but most if not all of the tools should work in other versions aswell.
+This is a small but expanding collection of tools that I have developed for use in Autodesk Maya. The tools have been compiled for maya 2016, 2016.5 and 2017. However, the source code is also provided so you can recompile them for whatever version you desire.
 
 Shaders
 =====================
