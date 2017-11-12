@@ -8,7 +8,7 @@ In addition to tools, the package also contains some useful shaders that were de
 
 Installation
 =====================
-The plugins can be used in maya by loading the .mll files (Located in the <i>Plugins/PLUGINNAME/Compiled<i> folder) from Maya's plugin manager.
+The plugins can be used in maya by loading the .mll files (Located in the <i>Plugins/PLUGINNAME/Compiled</i> folder) from Maya's plugin manager.
 
 To utilize the shaders, you must point the Arnold environment variable to the folder where the .osl and .mtl (From the <i>Shaders</i> folder) files are located, i.e. ARNOLD_PLUGIN_PATH=C:\solidangle\mtoadeploy\osl.
 
