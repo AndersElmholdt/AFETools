@@ -72,8 +72,17 @@ MStatus HistoryControlCmd::doIt(const MArgList &args)
 
 			if (inNodeOutPlug.isNull())
 			{
-				MGlobal::displayWarning("Unable to add HistoryControl node for " + sDagPathFn.name());
-				continue;
+				inNodeOutPlug = inNodeFn.findPlug("outputGeometry", &stat);
+				if (inNodeOutPlug.isNull())
+				{
+					inNodeOutPlug = inNodeFn.findPlug("outMesh", &stat);
+					
+					if (inNodeOutPlug.isNull())
+					{
+						MGlobal::displayWarning("Unable to add HistoryControl node for " + sDagPathFn.name());
+						continue;
+					}
+				}
 			}
 
 			MObject historyNode = dgMod.createNode(HistoryControlNode::typeId, &stat);

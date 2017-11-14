@@ -92,7 +92,11 @@ void HistoryControlNode::updateActiveNode()
 	MFnDependencyNode oldActiveNodeFn(oldActiveNode, &stat);
 	MPlug oldActiveNodeOutPlug = oldActiveNodeFn.findPlug(MString("output"), false, &stat);
 	if (oldActiveNodeOutPlug.isNull())
+	{
 		oldActiveNodeOutPlug = oldActiveNodeFn.findPlug(MString("outMesh"), false, &stat);
+		if (oldActiveNodeOutPlug.isNull())
+			oldActiveNodeOutPlug = oldActiveNodeFn.findPlug(MString("outputGeometry"), false, &stat);
+	}
 
 	MPlug inPlug(thisMObject(), inputPolymesh);
 
@@ -114,13 +118,19 @@ void HistoryControlNode::updateActiveNode()
 
 		MFnDependencyNode newActiveNodeFn(newActiveNode, &stat);
 		inPlug = newActiveNodeFn.findPlug(MString("inputPolymesh"), true);
+		if (inPlug.isNull())
+			inPlug = newActiveNodeFn.findPlug(MString("inputGeometry"), true);
 	}
 
 	MFnDependencyNode newActiveNodeFn(newActiveNode, &stat);
 
 	MPlug outPlug = newActiveNodeFn.findPlug(MString("output"), false);
 	if (outPlug.isNull())
-		outPlug = newActiveNodeFn.findPlug(MString("outMesh"), false);
+	{
+			outPlug = newActiveNodeFn.findPlug(MString("outMesh"), false);
+			if (outPlug.isNull())
+				outPlug = newActiveNodeFn.findPlug(MString("outputGeometry"), false);
+	}
 	
 	MDGModifier mdg;
 	mdg.disconnect(oldActiveNodeOutPlug, activeNodePlug);
