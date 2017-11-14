@@ -8,9 +8,9 @@ In addition to tools, the package also contains some useful shaders that were de
 
 Installation
 =====================
-The plugins can be used in maya by loading the .mll files (Located in the <i>Plugins/PLUGINNAME/Compiled</i> folder) from Maya's plugin manager.
+The plugins can be used in maya by loading the .mll files (Located in the <i>Plugins/PLUGINNAME/Compiled</i> folder) from Maya's plugin manager. Most plugins also have an accompanying GUI, which consists of a python script located in the <i>Scripts</i> folder. This folder also contains a few standalone scripts for maya. The GUI and tool scripts can easily be added to the maya shelf or tool bar. Refer to the [Maya User Guide on the Shelf](https://knowledge.autodesk.com/support/maya/learn-explore/caas/CloudHelp/cloudhelp/2016/ENU/Maya/files/GUID-C693E884-F81A-4858-B5D6-3856EB8F394E-htm.html) for more information on adding a script to the shelf.
 
-To utilize the shaders, you must point the Arnold environment variable to the folder where the .osl and .mtl (From the <i>Shaders</i> folder) files are located, i.e. ARNOLD_PLUGIN_PATH=C:\solidangle\mtoadeploy\osl.
+To utilize the shaders, you must point the Arnold environment variable to the folder where the .osl and .mtl (From the <i>Shaders</i> folder) files are located, i.e. ARNOLD_PLUGIN_PATH=C:\solidangle\mtoadeploy\osl. 
 
 Finally, the .mel files (From the <i>Templates</i> folder) must be placed in the maya scripts folder, i.e. C:\Users\Username\Documents\maya\scripts.
 
