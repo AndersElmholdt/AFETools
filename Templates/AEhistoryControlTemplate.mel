@@ -1,4 +1,4 @@
-global proc AEhistoryControlNodeTemplate(string $nodeName)
+global proc AEhistoryControlTemplate(string $nodeName)
 {
     editorTemplate -beginScrollLayout;
  
