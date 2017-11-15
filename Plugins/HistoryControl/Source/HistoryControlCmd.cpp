@@ -12,6 +12,8 @@
 #include <maya/MFnTransform.h>
 #include <maya/MSyntax.h>
 #include <maya/MArgDatabase.h>
+#include <maya/MFloatVector.h>
+#include <maya/MPlugArray.h>
 
 const MString HistoryControlCmd::commandName("addHistoryControl");
 const char * const HistoryControlCmd::amountFlag = "-a";
@@ -21,8 +23,8 @@ MStatus HistoryControlCmd::doIt(const MArgList &args)
 {
 	MStatus stat;
 
-	int amount = 1;
-
+	// Get cmd options
+	amount = 1;
 	MArgDatabase argData(syntax(), args, &stat);
 	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Invalid input flags");
 
@@ -32,86 +34,40 @@ MStatus HistoryControlCmd::doIt(const MArgList &args)
 		amount = 1;
 
 	MSelectionList selection;
-	stat = MGlobal::getActiveSelectionList(selection);
-	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to get selection list");
+	MGlobal::getActiveSelectionList(selection);
 
-	MItSelectionList iter(selection, MFn::kTransform, &stat);
-	CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to create selection iteration list");
-	MDagPath tDagPath;
-
-	if (iter.isDone())
-		MGlobal::displayWarning("You must have a poly object selected to add a history control node");
-
+	int nSelMeshes = 0;
+	MDagPath dagPath;
+	MItSelectionList iter(selection, MFn::kMesh);
 	for (; !iter.isDone(); iter.next())
 	{
-		stat = iter.getDagPath(tDagPath);
-		if (!stat)
-			continue;
+		nSelMeshes++;
 
-		unsigned int numShapes;
-		stat = tDagPath.numberOfShapesDirectlyBelow(numShapes);
-		if (!stat)
-			continue;
+		iter.getDagPath(dagPath);
+		dagPath.extendToShape();
 
-		for (unsigned int i = 0; i < numShapes; ++i)
-		{
-			MDagPath sDagPath = tDagPath;
-			sDagPath.extendToShapeDirectlyBelow(i);
-			MFnDagNode sDagPathFn(sDagPath);
-			MPlug inMeshPlug = sDagPathFn.findPlug("inMesh");
-			MObject inNode = utility::getDestinationNode(inMeshPlug, &stat);
-
-			if (inNode.isNull())
-			{
-				MGlobal::displayWarning("HistoryControl node not added for " + sDagPathFn.name() + " as it does not have any poly history");
-				continue;
-			}
-
-			MFnDependencyNode inNodeFn(inNode, &stat);
-			MPlug inNodeOutPlug = inNodeFn.findPlug("output", &stat);
-
-			if (inNodeOutPlug.isNull())
-			{
-				inNodeOutPlug = inNodeFn.findPlug("outputGeometry", &stat);
-				if (inNodeOutPlug.isNull())
-				{
-					inNodeOutPlug = inNodeFn.findPlug("outMesh", &stat);
-					
-					if (inNodeOutPlug.isNull())
-					{
-						MGlobal::displayWarning("Unable to add HistoryControl node for " + sDagPathFn.name());
-						continue;
-					}
-				}
-			}
-
-			MObject historyNode = dgMod.createNode(HistoryControlNode::typeId, &stat);
-			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to create history control node");
-
-			MFnDependencyNode historyFn(historyNode, &stat);
-
-			stat = dgMod.disconnect(inNodeOutPlug, inMeshPlug);
-			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to disconnect connection between " + inNodeFn.name() + " and " + sDagPathFn.name());
-			stat = dgMod.connect(historyFn.findPlug("output"), inMeshPlug);
-			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to establish connection between " + historyFn.name() + " and " + sDagPathFn.name());
-			stat = dgMod.connect(inNodeOutPlug, historyFn.findPlug("inputPolymesh"));
-			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to establish connection between " + inNodeFn.name() + " and " + historyFn.name());
-			stat = dgMod.newPlugValueInt(historyFn.findPlug("amount"), amount);
-			CHECK_MSTATUS_AND_PRINT_ERROR(stat, "Unable to set amount value");
-		}
+		break;
 	}
 
-	return redoIt();
+	if (nSelMeshes == 0)
+	{
+		MGlobal::displayWarning("Select one or more meshes");
+		return MS::kFailure;
+	}
+
+	CmpMeshModifierCmd::doIt(dagPath, HistoryControlNode::typeId);
+
+	return MS::kSuccess;
 }
 
-MStatus HistoryControlCmd::redoIt()
+MStatus HistoryControlCmd::initModifierNode(MObject & node, MDagModifier & dagMod)
 {
-	return dgMod.doIt();
-}
+	MStatus stat;
 
-MStatus HistoryControlCmd::undoIt()
-{
-	return dgMod.undoIt();
+	MFnDependencyNode depFn(node);
+	stat = dagMod.newPlugValueInt(depFn.findPlug("amount"), amount);
+
+	return stat;
 }
 
 MSyntax HistoryControlCmd::newSyntax()

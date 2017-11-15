@@ -7,14 +7,14 @@
 
 #include <maya/MPxCommand.h>
 #include <maya/MDagModifier.h>
+#include "CmpMeshModifierCmd.h"
 
-class HistoryControlCmd : public MPxCommand
+class HistoryControlCmd : public CmpMeshModifierCmd
 {
 public:
-	MStatus doIt(const MArgList&) override;
-	MStatus undoIt() override;
-	MStatus redoIt() override;
-	bool isUndoable() const override { return true; }
+	virtual MStatus doIt(const MArgList&);
+
+	virtual MStatus HistoryControlCmd::initModifierNode(MObject &node, MDagModifier &dagMod);
 
 	static void *creator() { return new HistoryControlCmd; }
 	static MSyntax newSyntax();
@@ -22,8 +22,7 @@ public:
 	static const MString commandName;
 
 private:
-	MDGModifier dgMod;
-
+	int amount;
 	static const char * const amountFlag;
 	static const char * const amountLongFlag;
 };
