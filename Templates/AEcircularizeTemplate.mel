@@ -1,0 +1,19 @@
+global proc AEcircularizeTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Circularize Attributes" -collapse 0;
+        editorTemplate -addControl "strength";
+        editorTemplate -addControl "radius";
+        editorTemplate -addControl "twist";
+        editorTemplate -bn;
+        editorTemplate -addControl "flatten";
+        editorTemplate -addControl "autoEstimateRadius";
+        editorTemplate -en;
+    editorTemplate -endLayout;
+    
+    AEdependNodeTemplate $nodeName;
+    
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
