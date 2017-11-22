@@ -95,7 +95,11 @@ class CircularizeWindow(object):
         button(closeButton, e=1, c='win.closeAction()')
         
     def reset(self):
-        intSliderGrp(self.amountSlider, e=1, v=1, max=20)
+        floatSliderGrp(self.strengthSlider, e=1, v=1)
+        floatSliderGrp(self.twistSlider, e=1, v=0)
+        floatSliderGrp(self.radiusSlider, e=1, v=1, max=5, fieldMaxValue=10000, en=False)
+        checkBoxGrp(self.autoCheckbox, e=1, v1=True)
+        radioButtonGrp(self.flattenRadioGrp, e=1, sl=2)
         
     def createAction(self):
         self.applyAction()
