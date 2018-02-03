@@ -1,0 +1,34 @@
+global proc WedgeControl_RunButtonCreate(string $runAttrName)
+{
+	string $nodeName = substituteAllString($runAttrName, ".RunWedges", "");
+	button -l "Run Wedges" -height 30 -c ("runWedges -n " + $nodeName) WControlRunButton;
+}
+
+global proc WedgeControl_RunButtonUpdate(string $runAttrName)
+{
+    string $nodeName = substituteAllString($runAttrName, ".RunWedges", "");
+	button -e -c ("runWedges -n " + $nodeName) WControlRunButton;
+}
+
+global proc AEwedgeControlTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Wedging Attributes" -collapse 0;
+        editorTemplate -addControl "cacheName";
+		editorTemplate -addControl "cacheType";
+        editorTemplate -addControl "startFrame";
+        editorTemplate -addControl "endFrame";
+        editorTemplate -label "Frame Step" -addControl "stepFrame";
+        editorTemplate -addControl "numberOfWedges";
+        editorTemplate -as;
+        editorTemplate -addControl "objectName";
+        editorTemplate -addControl "currentWedge";
+        editorTemplate -callCustom "WedgeControl_RunButtonCreate" "WedgeControl_RunButtonUpdate" "RunWedges";
+    editorTemplate -endLayout;
+    
+	AEtransformMain $nodeName;
+    AEtransformNoScroll $nodeName; 
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
