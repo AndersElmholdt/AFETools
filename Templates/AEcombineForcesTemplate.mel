@@ -1,0 +1,11 @@
+global proc AEcombineForcesTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Combine Forces Attributes" -collapse 0;
+		editorTemplate -addControl "operationType";
+    editorTemplate -endLayout;
+    
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
