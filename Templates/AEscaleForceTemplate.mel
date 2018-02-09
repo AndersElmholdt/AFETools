@@ -1,0 +1,11 @@
+global proc AEscaleForceTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Scale Force Attributes" -collapse 0;
+		editorTemplate -addControl "scaleForce";
+    editorTemplate -endLayout;
+    
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
