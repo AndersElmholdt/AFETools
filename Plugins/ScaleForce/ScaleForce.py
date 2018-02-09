@@ -8,6 +8,7 @@ class vectorArrayReverse(OpenMayaMPx.MPxNode):
 	inputArray = OpenMaya.MObject()
 	outputArray = OpenMaya.MObject()
 	scaleValue = OpenMaya.MObject()
+	operationAttr = OpenMaya.MObject()
 
 	def __init__(self):
 		OpenMayaMPx.MPxNode.__init__(self)
@@ -28,6 +29,8 @@ class vectorArrayReverse(OpenMayaMPx.MPxNode):
 				outputArrayValue.setMObject(inputArrayData)
 				dataBlock.setClean(plug)
 				return
+				
+			operation = dataBlock.inputValue(vectorArrayReverse.operationAttr).asInt()
 			
 			inputArrayData = dataBlock.inputValue(vectorArrayReverse.inputArray).data()
 			inputArrayFn = OpenMaya.MFnVectorArrayData(inputArrayData)
@@ -40,7 +43,14 @@ class vectorArrayReverse(OpenMayaMPx.MPxNode):
 			zScale = inputScalePlug.child(2).asDouble()
 			
 			for i in range(inputArrayEdit.length()):
-				newVal = OpenMaya.MVector(inputArrayEdit[i][0] * xScale, inputArrayEdit[i][1] * yScale, inputArrayEdit[i][2] * zScale)
+				if operation == 0: # add
+					newVal = OpenMaya.MVector(inputArrayEdit[i][0] + xScale, inputArrayEdit[i][1] + yScale, inputArrayEdit[i][2] + zScale)
+				elif operation == 1: # subtract
+					newVal = OpenMaya.MVector(inputArrayEdit[i][0] - xScale, inputArrayEdit[i][1] - yScale, inputArrayEdit[i][2] - zScale)
+				elif operation == 2: # multiply
+					newVal = OpenMaya.MVector(inputArrayEdit[i][0] * xScale, inputArrayEdit[i][1] * yScale, inputArrayEdit[i][2] * zScale)
+				elif operation == 3: # divide
+					newVal = OpenMaya.MVector(inputArrayEdit[i][0] / xScale, inputArrayEdit[i][1] / yScale, inputArrayEdit[i][2] / zScale)
 				inputArrayEdit.set(newVal, i)
 			
 			outputArrayFn = OpenMaya.MFnVectorArrayData()
@@ -58,6 +68,13 @@ def nodeCreator():
 def nodeInitializer():
 	tAttr = OpenMaya.MFnTypedAttribute()
 	nAttr = OpenMaya.MFnNumericAttribute()
+	eAttr = OpenMaya.MFnEnumAttribute()
+	
+	vectorArrayReverse.operationAttr = eAttr.create('operationType', 'ot')
+	eAttr.addField('+', 0)
+	eAttr.addField('-', 1)
+	eAttr.addField('*', 2)
+	eAttr.addField('/', 3)
 	
 	vectorArrayReverse.scaleValue = nAttr.createPoint('scaleForce', 'sf')
 	
@@ -69,9 +86,11 @@ def nodeInitializer():
 	vectorArrayReverse.addAttribute(vectorArrayReverse.outputArray)
 	vectorArrayReverse.addAttribute(vectorArrayReverse.inputArray)
 	vectorArrayReverse.addAttribute(vectorArrayReverse.scaleValue)
+	vectorArrayReverse.addAttribute(vectorArrayReverse.operationAttr)
 	
 	vectorArrayReverse.attributeAffects(vectorArrayReverse.inputArray, vectorArrayReverse.outputArray)
 	vectorArrayReverse.attributeAffects(vectorArrayReverse.scaleValue, vectorArrayReverse.outputArray)
+	vectorArrayReverse.attributeAffects(vectorArrayReverse.operationAttr, vectorArrayReverse.outputArray)
 
 def initializePlugin(obj):
 	mplugin = OpenMayaMPx.MFnPlugin(obj, "", "", "Any")
