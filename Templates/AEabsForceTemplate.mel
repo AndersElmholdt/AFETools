@@ -1,0 +1,13 @@
+global proc AEabsForceTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Absolute Force Attributes" -collapse 0;
+		editorTemplate -addControl "computeX";
+		editorTemplate -addControl "computeY";
+		editorTemplate -addControl "computeZ";
+    editorTemplate -endLayout;
+    
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
