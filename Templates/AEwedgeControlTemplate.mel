@@ -1,7 +1,35 @@
+global proc WedgeControl_buildQT(string $nodeName)
+{
+	//make sure the Python QT module is loaded
+    python("import AEwedgeControlTemplate");
+
+    // When the $nodeName is passed in, there will be a trailing dot (.)...rm it
+    $nodeName = python("'" + $nodeName + "'.rstrip('.')");
+
+    // Get the current layout
+    string $par = `setParent -q`;
+
+    // Pass the layout and node name to the QT build/create cmd
+    python("AEwedgeControlTemplate.buildQT('" + $par + "', '" + $nodeName + "')");
+}
+
+global proc WedgeControl_updateQT(string $nodeName)
+{
+	// When the $nodeName is passed in, there will be a trailing dot (.)...rm it
+    $nodeName = python("'" + $nodeName + "'.rstrip('.')");
+
+    // Get the current layout
+    string $par = `setParent -q`;
+
+    // Pass the layout and node name to the QT update cmd
+    python("AEwedgeControlTemplate.updateQT('" + $par + "', '" + $nodeName + "')");
+}
+
 global proc WedgeControl_RunButtonCreate(string $runAttrName)
 {
 	string $nodeName = substituteAllString($runAttrName, ".RunWedges", "");
-	button -l "Run Wedges" -height 30 -c ("runWedges -n " + $nodeName) WControlRunButton;
+	string $parent = `columnLayout -columnAttach "both" 5 -rowSpacing 10 -adj 1`;
+		button -h 30 -l "Run Wedges" -c ("runWedges -n " + $nodeName) WControlRunButton;
 }
 
 global proc WedgeControl_RunButtonUpdate(string $runAttrName)
@@ -15,15 +43,11 @@ global proc AEwedgeControlTemplate(string $nodeName)
     editorTemplate -beginScrollLayout;
     
     editorTemplate -beginLayout "Wedging Attributes" -collapse 0;
-        editorTemplate -addControl "cacheName";
-		editorTemplate -addControl "cacheType";
-        editorTemplate -addControl "startFrame";
-        editorTemplate -addControl "endFrame";
-        editorTemplate -label "Frame Step" -addControl "stepFrame";
+		editorTemplate -addControl "isActive";
         editorTemplate -addControl "numberOfWedges";
         editorTemplate -as;
-        editorTemplate -addControl "objectName";
         editorTemplate -addControl "currentWedge";
+		editorTemplate -callCustom "WedgeControl_buildQT" "WedgeControl_updateQT" "";
         editorTemplate -callCustom "WedgeControl_RunButtonCreate" "WedgeControl_RunButtonUpdate" "RunWedges";
     editorTemplate -endLayout;
     

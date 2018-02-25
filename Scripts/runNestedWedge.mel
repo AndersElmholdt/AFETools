@@ -1,0 +1,78 @@
+global proc runNestedWedge(string $wedgeController, string $nestedWedgeControllers[], string $postFix)
+{
+    // get current wedge
+    int $currentWedge = `getAttr ($wedgeController + ".currentWedge")`;
+    int $numWedges = `getAttr ($wedgeController + ".numberOfWedges")`;
+    
+    int $numWedgeControllers = size($nestedWedgeControllers);
+    for ($i = 0; $i < $numWedgeControllers; $i++)
+    {
+        // get the connected wedge actions
+        string $wedgeActions[] = `listConnections ($nestedWedgeControllers[$i] + ".connectedWedgeActions")`;
+        int $numWedgeActions = size($wedgeActions);
+        int $wedgeActionTypes[];
+        
+        for ($j = 0; $j < $numWedgeActions; $j++)
+        {
+            $wedgeActionTypes[$j] = `getAttr ($wedgeActions[$j] + ".wedgeActionType")`;
+            if ($wedgeActionTypes[$j] == 1)
+                continue;
+                
+            // currently using various names for cache name...
+            string $cacheAttribute = ".cacheName";
+            if ($wedgeActionTypes[$j] == 2)
+                $cacheAttribute = ".fileName";
+               
+            // add postfix
+            string $curName = `getAttr ($wedgeActions[$j] + $cacheAttribute)`;
+            string $match = `match $postFix $curName`;
+            if ($match == "")
+                $curName += $postFix + "1";
+            string $regex = $postFix + ".";
+            string $newName = `substitute $regex $curName ($postFix + $currentWedge)`;
+            setAttr -type "string" ($wedgeActions[$j] + $cacheAttribute) $newName;
+        }
+    }
+    
+    runWedges -n $nestedWedgeControllers[0];
+    
+    for ($i = 0; $i < $numWedgeControllers; $i++)
+    {
+        // get the connected wedge actions
+        string $wedgeActions[] = `listConnections ($nestedWedgeControllers[$i] + ".connectedWedgeActions")`;
+        int $numWedgeActions = size($wedgeActions);
+        int $wedgeActionTypes[];
+        
+        
+        for ($j = 0; $j < $numWedgeActions; $j++)
+        {
+            $wedgeActionTypes[$j] = `getAttr ($wedgeActions[$j] + ".wedgeActionType")`;
+            if ($wedgeActionTypes[$j] != 0)
+                continue;
+            
+            // currently using various names for cache name...
+            string $cacheAttribute = ".cacheName";
+            if ($wedgeActionTypes[$j] == 2)
+                $cacheAttribute = ".fileName";
+               
+            // remove postfix
+            string $curName = `getAttr ($wedgeActions[$j] + $cacheAttribute)`;
+            string $regex = $postFix + ".";
+            string $newName = `substitute $regex $curName ""`;
+            setAttr -type "string" ($wedgeActions[$j] + $cacheAttribute) $newName;
+            
+            // don't delete cache on last run
+            if ($currentWedge + 1 == $numWedges)
+                continue;
+            
+            // delete the cache if necessary (only for nObject and Fluid)
+            int $cacheType = `getAttr ($wedgeActions[$j] + ".cacheType")`;
+            if ($cacheType == 2)
+                continue;
+                
+            string $objectName = `getAttr ($wedgeActions[$j] + ".objectName")`;
+            select $objectName;
+            deleteCacheFile 2 { "keep", "" };
+        }
+    }
+}

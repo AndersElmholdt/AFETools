@@ -1,0 +1,17 @@
+global proc AEwedgeCacheActionTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Cache Action Attributes" -collapse 0;
+		editorTemplate -addControl "isActive";
+        editorTemplate -addControl "cacheName";
+		editorTemplate -addControl "objectName";
+		editorTemplate -addControl "cacheType";
+		editorTemplate -addControl "startFrame";
+		editorTemplate -addControl "endFrame";
+		editorTemplate -addControl "frameStep";
+    editorTemplate -endLayout;
+ 
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}

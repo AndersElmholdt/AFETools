@@ -1,0 +1,40 @@
+global proc WedgeCustomAction_buildQT(string $nodeName)
+{
+	//make sure the Python QT module is loaded
+    python("import AEwedgeCustomActionTemplate");
+
+    // When the $nodeName is passed in, there will be a trailing dot (.)...rm it
+    $nodeName = python("'" + $nodeName + "'.rstrip('.')");
+
+    // Get the current layout
+    string $par = `setParent -q`;
+
+    // Pass the layout and node name to the QT build/create cmd
+    python("AEwedgeCustomActionTemplate.buildQT('" + $par + "', '" + $nodeName + "')");
+}
+
+global proc WedgeCustomAction_updateQT(string $nodeName)
+{
+	// When the $nodeName is passed in, there will be a trailing dot (.)...rm it
+    $nodeName = python("'" + $nodeName + "'.rstrip('.')");
+
+    // Get the current layout
+    string $par = `setParent -q`;
+
+    // Pass the layout and node name to the QT update cmd
+    python("AEwedgeCustomActionTemplate.updateQT('" + $par + "', '" + $nodeName + "')");
+}
+
+global proc AEwedgeCustomActionTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Custom Action Code" -collapse 0;
+		editorTemplate -addControl "isActive";
+        editorTemplate -callCustom "WedgeCustomAction_buildQT" "WedgeCustomAction_updateQT" "";
+		//editorTemplate -callCustom "WedgeCustomAction_CmdFieldCreate" "WedgeCustomAction_CmdFieldUpdate" "CustomCode";
+    editorTemplate -endLayout;
+     
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}

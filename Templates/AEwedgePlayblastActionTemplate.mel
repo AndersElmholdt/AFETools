@@ -1,0 +1,25 @@
+global proc AEwedgePlayblastActionTemplate(string $nodeName)
+{
+    editorTemplate -beginScrollLayout;
+    
+    editorTemplate -beginLayout "Playblast Action Attributes" -collapse 0;
+		editorTemplate -bn;
+		editorTemplate -addControl "isActive";
+		editorTemplate -en;
+        editorTemplate -addControl "showOrnaments";
+		editorTemplate -addControl "renderOffscreen";
+		editorTemplate -addControl "format";
+		editorTemplate -addControl "encoding";
+		editorTemplate -addControl "quality";
+		editorTemplate -addControl "width";
+		editorTemplate -addControl "height";
+		editorTemplate -addControl -l "Scale" "percent";
+		editorTemplate -addControl "framePadding";
+		editorTemplate -addControl "startFrame";
+		editorTemplate -addControl "endFrame";
+		editorTemplate -addControl "fileName";
+    editorTemplate -endLayout;
+ 
+    editorTemplate -addExtraControls;
+    editorTemplate -endScrollLayout;
+}
